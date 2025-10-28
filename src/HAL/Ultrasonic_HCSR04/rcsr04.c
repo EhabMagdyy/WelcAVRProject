@@ -1,63 +1,76 @@
 /*
  * rcsr04.c
  *
- * Created: 10/26/2025 1:11:47 PM
- *  Author: Ehab
- */ 
+ * Created: 10/26/2025
+ * Author: Ehab
+ */
 
 #include "../../Lib/SystemConfig.h"
 #include "../../Lib/STD_Types.h"
-#include "../../MCAL/Timer0/timer0.h"
+#include "../../MCAL/DIO/dio.h"
+#include <avr/io.h>
+#include <util/delay.h>
 #include "rcsr04.h"
 
-static TIMER0_Config_t timerConfig = {
-	.mode = TIMER0_NORMAL,
-	.prescaler = TIMER0_PRESCALER_8,       // 1 us per tick
-	.oc_mode = TIMER0_OC_DISCONNECTED,
-	.initial_value = 0,
-	.compare_value = 0,
-	.enable_overflow_interrupt = 0,
-	.enable_compare_interrupt = 0
-};
+// Timer0 prescaler = 8 → tick = 0.5 µs @ 16 MHz
+#define ULTRASONIC_TIMEOUT_OVERFLOWS 250  // safety limit (~65ms)
+#define SPEED_OF_SOUND_CM_PER_US 0.0343f
 
-void Ultrasonic_Init(ultrasonic_t obj)
+#define ULTRASONIC_TRIG_PIN PB1
+#define ULTRASONIC_ECHO_PIN PB2
+
+void Ultrasonic_Init(ultrasonic_t *obj)
 {
-	DIO_Init(obj.trigger);
-	DIO_Init(obj.echo);
-	TIMER0_Init(timerConfig);
+    DDRB |= (1 << ULTRASONIC_TRIG_PIN);   // TRIG as output
+    DDRB &= ~(1 << ULTRASONIC_ECHO_PIN);  // ECHO as input
 }
 
-uint16 Ultrasonic_Calculate_Distance(ultrasonic_t obj)
-{	
-	uint16 Timer0_Value = 0, distance = 0;
-	uint8 EchoPinLogic = DIO_LOW;
-	
-	/* Send Trigger Signal to the Ultrasonic Trigger Pin */
-	obj.trigger.logic = DIO_HIGH;
-	DIO_SetPinValue(obj.trigger);
-	_delay_us(15);
-	obj.trigger.logic = DIO_LOW;
-	DIO_SetPinValue(obj.trigger);
-		
-	/* Wait the Echo pin to be High */
-	while(DIO_LOW == EchoPinLogic){
-		EchoPinLogic = DIO_GetPinLogic(obj.echo);
-	}
-		
-	/* Clear Timer0 Ticks */
-	TIMER0_WriteValue(0);
+uint16 Ultrasonic_Calculate_Distance(ultrasonic_t *obj)
+{
+    uint16_t overflow_count = 0;
+    uint8_t timer_end;
 
-	/* Wait the Echo pin to be Low */
-	while(DIO_HIGH == EchoPinLogic)
-	{
-		EchoPinLogic = DIO_GetPinLogic(obj.echo);
-	}
-		
-	/* Read the time */
-	Timer0_Value = TIMER0_ReadValue();
-		
-	/* Calculate the distance */
-	distance = (uint16)((Timer0_Value - 192) / 57) + 3;
+    // --- Trigger pulse ---
+    PORTB &= ~(1 << ULTRASONIC_TRIG_PIN);
+    _delay_us(2);
+    PORTB |= (1 << ULTRASONIC_TRIG_PIN);
+    _delay_us(10);
+    PORTB &= ~(1 << ULTRASONIC_TRIG_PIN);
 
-	return distance;
+    // --- Wait for ECHO rising edge ---
+    uint32_t timeout = 40000;
+    while (!(PINB & (1 << ULTRASONIC_ECHO_PIN))) {
+        if (--timeout == 0) return 0;
+    }
+
+    // --- Setup Timer0 ---
+    TCCR0A = 0;
+    TCCR0B = (1 << CS01);   // prescaler 8 → 0.5 µs per tick
+    TCNT0 = 0;
+    overflow_count = 0;
+
+    // --- Measure HIGH pulse ---
+    while (PINB & (1 << ULTRASONIC_ECHO_PIN)) {
+        if (TIFR0 & (1 << TOV0)) { // overflow flag set
+            TIFR0 |= (1 << TOV0);  // clear it
+            overflow_count++;
+            if (overflow_count > 250) { // ~65 ms
+                TCCR0B = 0;
+                return 0; // timeout
+            }
+        }
+    }
+
+    // --- Stop timer and capture count ---
+    timer_end = TCNT0;
+    TCCR0B = 0;
+
+    // --- Compute total ticks (including overflows) ---
+    uint32_t total_ticks = ((uint32_t)overflow_count * 256UL) + timer_end;
+
+    // Convert to distance:
+    // tick = 0.5 µs → time = total_ticks * 0.5
+    // distance (cm) = time * 0.0343 / 2
+    float distance = (total_ticks * 0.5f * 0.0343f) / 2.0f;
+    return (uint16_t)distance;
 }

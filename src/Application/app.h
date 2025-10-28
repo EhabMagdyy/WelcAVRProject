@@ -28,14 +28,14 @@ pin_config_t enRight;
 UART_Config_t bluetooth;
 pin_config_t test;
 
-ultrasonic_t hcsr04;
+ultrasonic_t ultrasonic_sensor;
 
 PWM_Config_t motorPWM;
 
 
 void initialize_app();
 
-void Car_Mode_RC(uint8 command);
+void Car_Mode_RC();
 void Car_Mode_OA();
 void Car_Mode_LF();
 void Car_Mode_Maze();

@@ -16,7 +16,7 @@ typedef struct {
 	pin_config_t echo;
 } ultrasonic_t;
 
-void Ultrasonic_Init(ultrasonic_t obj);
-uint16 Ultrasonic_Calculate_Distance(ultrasonic_t obj);
+void Ultrasonic_Init(ultrasonic_t* obj);
+uint16 Ultrasonic_Calculate_Distance(ultrasonic_t* obj);
 
 #endif /* RCSR04_H_ */
