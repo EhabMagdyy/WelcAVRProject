@@ -16,15 +16,15 @@ static void CAR_Stop();
 
 motor_t motorLeft = {
 	.motor_pin = {
-		{ .port = PORT_B, .pin = PIN_0, .direction = DIO_DIRECTION_OUTPUT, .logic = DIO_LOW },
-		{ .port = PORT_B, .pin = PIN_1, .direction = DIO_DIRECTION_OUTPUT, .logic = DIO_LOW }
+		{ .port = PORT_B, .pin = PIN_3, .direction = DIO_DIRECTION_OUTPUT, .logic = DIO_LOW },
+		{ .port = PORT_B, .pin = PIN_4, .direction = DIO_DIRECTION_OUTPUT, .logic = DIO_LOW }
 	}
 };
 
 motor_t motorRight = {
 	.motor_pin = {
-		{ .port = PORT_B, .pin = PIN_2, .direction = DIO_DIRECTION_OUTPUT, .logic = DIO_LOW },
-		{ .port = PORT_B, .pin = PIN_3, .direction = DIO_DIRECTION_OUTPUT, .logic = DIO_LOW }
+		{ .port = PORT_D, .pin = PIN_6, .direction = DIO_DIRECTION_OUTPUT, .logic = DIO_LOW },
+		{ .port = PORT_D, .pin = PIN_7, .direction = DIO_DIRECTION_OUTPUT, .logic = DIO_LOW }
 	}
 };
 
