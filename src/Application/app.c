@@ -53,12 +53,11 @@ void initialize_app(){
 	DC_Motor_Initiliaze(motorLeft);
 	DC_Motor_Initiliaze(motorRight);
 	UART_Init(bluetooth);
-	Ultrasonic_Init(&ultrasonic_sensor);
-	PWM1_Init(motorPWM);
-	PWM1_Start();
 }
 
 void Car_Mode_RC(){
+	PWM1_Init(motorPWM);
+	PWM1_Start();
 	while (CAR_MODE_RC == modeCommand) {
 		UART_SendString("Command: ");
 		char buffer[12];
@@ -82,6 +81,7 @@ void Car_Mode_RC(){
 }
 
 void Car_Mode_OA(){
+	Ultrasonic_Init(&ultrasonic_sensor);
 	while (CAR_MODE_OA == modeCommand) {
 		uint16 distance = Ultrasonic_Calculate_Distance(&ultrasonic_sensor);
 		UART_SendString("Distance: ");

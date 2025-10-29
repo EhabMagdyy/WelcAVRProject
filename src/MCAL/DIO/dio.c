@@ -9,9 +9,9 @@
 #include "../../Lib/BIT_Math.h"
 #include "dio.h"
 
-static volatile uint8* DDR_Registers[4] = { &DDRB, &DDRC, &DDRD};
-static volatile uint8* PORT_Registers[4] = {&PORTB, &PORTC, &PORTD};
-static volatile uint8* PIN_Registers[4] = {&PINB, &PINC, &PIND};
+static volatile uint8* DDR_Registers[3] = { &DDRB, &DDRC, &DDRD};
+static volatile uint8* PORT_Registers[3] = {&PORTB, &PORTC, &PORTD};
+static volatile uint8* PIN_Registers[3] = {&PINB, &PINC, &PIND};
 	
 void DIO_Init(pin_config_t dioPin)
 {
@@ -72,10 +72,10 @@ void DIO_SetPinValue(pin_config_t dioPin)
 
 uint8 DIO_GetPinLogic(pin_config_t dioPin)
 {
-    uint8 pin_value = 0;
+    uint8 pin_value = DIO_LOW;
     if (dioPin.port < MAX_PORT_NUMBER && dioPin.pin < MAX_PIN_NUMBER)
     {
-        pin_value = READ_BIT(*(PIN_Registers[dioPin.port]), dioPin.pin);
+        pin_value = READ_BIT(PINB, PIN2);
     }
     else
     {
