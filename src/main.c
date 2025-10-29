@@ -11,16 +11,10 @@
 volatile uint8 modeCommand = 0;
 volatile uint8 RCCommand = 0;
 
-// ISR for UART receive interrupt
 void UART_InterruptHandler(void)
 {
 	uint8 recCommand = UDR0;
-	/*
-	UART_SendString("Command: ");
-	char buffer[12];
-	sprintf(buffer, "%c", recCommand);
-	UART_SendString(buffer);
-	UART_SendString("\n");*/
+
 	switch(recCommand){
 		case '6' ... '9':	modeCommand = recCommand; break;
 		case 'A' ... 'Z':	
@@ -39,6 +33,8 @@ int main(void)
     while (1) {
 		Car_Mode_RC();
 		Car_Mode_OA();
+		Car_Mode_LF();
+		Car_Mode_Maze();
     }
 }
 

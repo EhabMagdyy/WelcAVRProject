@@ -13,6 +13,7 @@
 #include "../MCAL/UART/uart.h"
 #include "../HAL/Ultrasonic_HCSR04/rcsr04.h"
 #include "../MCAL/PWM/pwm.h"
+#include "../HAL/IR/ir.h"
 
 #define CAR_MODE_RC     '6'
 #define CAR_MODE_OA     '7'
@@ -25,12 +26,14 @@ motor_t motorRight;
 pin_config_t enLeft;
 pin_config_t enRight;
 
+PWM_Config_t motorPWM;
+
 UART_Config_t bluetooth;
-pin_config_t test;
 
 ultrasonic_t ultrasonic_sensor;
 
-PWM_Config_t motorPWM;
+pin_config_t irLeft;
+pin_config_t irRight;
 
 
 void initialize_app();

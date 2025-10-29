@@ -4,6 +4,7 @@
         "app.h": "c",
         "systemconfig.h": "c",
         "std_types.h": "c",
-        "bit_math.h": "c"
+        "bit_math.h": "c",
+        "dio.h": "c"
     }
 }
