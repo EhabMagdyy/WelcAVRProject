@@ -102,7 +102,7 @@ void Car_Mode_OA() {
         UART_SendString(" cm\n");
 
         switch(distance){
-			case 23 ... 300: 	CAR_Move_Forward();								break;
+			case 23 ... 300: 	PWM1_SetDutyCycle(60);  CAR_Move_Forward();  	break;
         	case 10 ... 22:     PWM1_SetDutyCycle(40);	CAR_Move_Forward();		break;
 			case 1 ... 9:
 				CAR_Stop();
