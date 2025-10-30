@@ -85,17 +85,38 @@ void Car_Mode_RC(){
     }
 }
 
-void Car_Mode_OA(){
-	Ultrasonic_Init(&ultrasonic_sensor);
-	while (CAR_MODE_OA == modeCommand) {
-		uint16 distance = Ultrasonic_Calculate_Distance(&ultrasonic_sensor);
-		UART_SendString("Distance: ");
-		char debug[10];
-		sprintf(debug, "%u", distance);
-		UART_SendString(debug);
-		UART_SendString(" cm\n");
-		_delay_ms(50);
-	}
+void Car_Mode_OA() {
+    Ultrasonic_Init(&ultrasonic_sensor);
+    PWM1_Init(motorPWM);
+    PWM1_Start();
+    PWM1_SetDutyCycle(60);
+
+    while (CAR_MODE_OA == modeCommand) {
+        uint16 distance = Ultrasonic_Calculate_Distance(&ultrasonic_sensor);
+
+        // Debug output
+        UART_SendString("Distance: ");
+        char debug[10];
+        sprintf(debug, "%u", distance);
+        UART_SendString(debug);
+        UART_SendString(" cm\n");
+
+        switch(distance){
+			case 23 ... 300: 	CAR_Move_Forward();								break;
+        	case 10 ... 22:     PWM1_SetDutyCycle(40);	CAR_Move_Forward();		break;
+			case 1 ... 9:
+				CAR_Stop();
+				_delay_ms(100);
+				CAR_Move_Right();
+				_delay_ms(200);
+				CAR_Stop();
+				break;
+        }
+
+        _delay_ms(50);
+    }
+
+    CAR_Stop();
 }
 
 void Car_Mode_LF(){
@@ -131,12 +152,15 @@ void Car_Mode_LF(){
 
         _delay_ms(50);
     }
+
+	CAR_Stop();
 }
 
 void Car_Mode_Maze(){
 	while (CAR_MODE_Maze == modeCommand) {
 		
 	}
+	CAR_Stop();
 }
 
 static void CAR_Move_Forward(){
