@@ -21,7 +21,7 @@ typedef struct{
 } motor_t;
 
 /************** Functions Decelerations **************/
-void DC_Motor_Initiliaze(motor_t motor);
-void DC_Motor_Move_CW(motor_t motor);
-void DC_Motor_Move_CCW(motor_t motor);
-void DC_Motor_Stop(motor_t motor);
+void DC_Motor_Initiliaze(motor_t* motor);
+void DC_Motor_Move_CW(motor_t* motor);
+void DC_Motor_Move_CCW(motor_t* motor);
+void DC_Motor_Stop(motor_t* motor);

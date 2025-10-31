@@ -4,7 +4,7 @@
 #include "ir.h"
 
 void IR_Init(pin_config_t* irObj){
-    DIO_Init(*irObj);
+    DIO_Init(irObj);
 }
 
 uint8 IR_ReadValue(pin_config_t* irOb){

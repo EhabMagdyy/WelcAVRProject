@@ -5,6 +5,7 @@
         "systemconfig.h": "c",
         "std_types.h": "c",
         "bit_math.h": "c",
-        "dio.h": "c"
+        "dio.h": "c",
+        "hcsr04.h": "c"
     }
 }

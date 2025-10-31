@@ -9,15 +9,15 @@
 #include "../../Lib/STD_Types.h"
 #include "../../Lib/BIT_Math.h"
 #include "../../MCAL/Timer0/timer0.h"
-#include "rcsr04.h"
+#include "hcsr04.h"
 
 #define ULTRASONIC_TIMEOUT		 252
 #define SPEED_OF_SOUND_CM_PER_US 0.0686f
 
 void Ultrasonic_Init(ultrasonic_t *obj)
 {
-	DIO_Init(obj->trigger);
-	DIO_Init(obj->echo);
+	DIO_Init(&(obj->trigger));
+	DIO_Init(&(obj->echo));
 }
 
 uint16 Ultrasonic_Calculate_Distance(ultrasonic_t *obj)
@@ -26,20 +26,20 @@ uint16 Ultrasonic_Calculate_Distance(ultrasonic_t *obj)
     uint8_t echoRecTime = 0;
 
 	obj->trigger.logic = DIO_HIGH;
-	DIO_SetPinValue(obj->trigger);
+	DIO_SetPinValue(&(obj->trigger));
 	_delay_us(10);
 	obj->trigger.logic = DIO_LOW;
-	DIO_SetPinValue(obj->trigger);
+	DIO_SetPinValue(&(obj->trigger));
 
     uint32_t timeout = 40000;
-    while (DIO_LOW == DIO_GetPinLogic(obj->echo)) {
+    while (DIO_LOW == DIO_GetPinLogic(&obj->echo)) {
         if (--timeout == 0) return 0;
     }
 
 	Timer0_Init();
     ovfCount = 0;
 
-    while (DIO_HIGH == DIO_GetPinLogic(obj->echo)) {
+    while (DIO_HIGH == DIO_GetPinLogic(&obj->echo)) {
         if (Timer0_CheckOverFlow()) {
             Timer0_ClearOverFlowFlag();  // clear the flag "by writing 1 in it"
             ovfCount++;

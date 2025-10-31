@@ -11,7 +11,7 @@
 
 #include "../HAL/DC_Motor/dc_motor.h"
 #include "../MCAL/UART/uart.h"
-#include "../HAL/Ultrasonic_HCSR04/rcsr04.h"
+#include "../HAL/Ultrasonic_HCSR04/hcsr04.h"
 #include "../MCAL/PWM/pwm.h"
 #include "../HAL/IR/ir.h"
 

@@ -55,11 +55,11 @@ typedef struct{
 } pin_config_t;
 
 /**********************  FUNCTION PROTOTYPES  *********************/
-void DIO_Init(pin_config_t dioPin);
-void DIO_SetPinDirection(pin_config_t dioPin);
-void DIO_SetPinValue(pin_config_t dioPin);
-uint8 DIO_GetPinLogic(pin_config_t dioPin);
-void DIO_TogglePinValue(pin_config_t dioPin);
+void DIO_Init(pin_config_t* dioPin);
+void DIO_SetPinDirection(pin_config_t* dioPin);
+void DIO_SetPinValue(pin_config_t* dioPin);
+uint8 DIO_GetPinLogic(pin_config_t* dioPin);
+void DIO_TogglePinValue(pin_config_t* dioPin);
 
 
 #endif /* DIO_H_ */

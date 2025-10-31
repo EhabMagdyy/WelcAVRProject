@@ -6,33 +6,29 @@
  */ 
 
 #include "../../Lib/SystemConfig.h"
+#include "../../Lib/BIT_Math.h"
 #include "pwm.h"
 
 #define TIMER1_PRESCALER 8
 
-static PWM_Config_t g_pwmConfig;
+static PWM_Config_t pwmConfig;
 
-void PWM1_Init(PWM_Config_t config)
+void PWM1_Init(PWM_Config_t* config)
 {
-	g_pwmConfig = config;
+	pwmConfig = *config;
 
-	// Configure OC1A (PB1) as output for Timer1 PWM on ATmega328P
-	DDRB |= (1 << PB1);
+ 	SET_BIT(DDRB, PB1);
 
-	// Set Fast PWM mode using ICR1 as TOP "Mode 14"
 	TCCR1A = (1 << WGM11);
 	TCCR1B = (1 << WGM13) | (1 << WGM12);
 
-	// Non-inverting mode on OC1A (Clear on compare)
 	TCCR1A |= (1 << COM1A1);
 
-	// Calculate prescaler & ICR1 "TOP"
-	uint16 prescaler_val = TIMER1_PRESCALER;  // timer clock -> 1 MHz
-	uint32 top = (F_CPU / (prescaler_val * config.frequency)) - 1;
+	uint16 prescaler_val = TIMER1_PRESCALER;  // timer clock -> 2 MHz
+	uint32 top = (F_CPU / (prescaler_val * config->frequency)) - 1;
 	ICR1 = (uint16)top;
 
-	// Set initial duty cycle
-	PWM1_SetDutyCycle(config.duty_cycle);
+	PWM1_SetDutyCycle(config->duty_cycle);
 }
 
 void PWM1_SetDutyCycle(uint8 duty)

@@ -48,27 +48,29 @@ PWM_Config_t motorPWM = {
 pin_config_t irLeft = { .port = PORT_C, .pin = PIN_2, .direction = DIO_DIRECTION_INPUT,  .logic = DIO_LOW };
 pin_config_t irRight = { .port = PORT_C, .pin = PIN_3, .direction = DIO_DIRECTION_INPUT,  .logic = DIO_LOW };
 
-// received by isr
+// changed by uart isr
 extern volatile uint8 modeCommand;
 extern volatile uint8 RCCommand;
 
 void initialize_app(){
-	DC_Motor_Initiliaze(motorLeft);
-	DC_Motor_Initiliaze(motorRight);
+	DC_Motor_Initiliaze(&motorLeft);
+	DC_Motor_Initiliaze(&motorRight);
 	UART_Init(bluetooth);
 	IR_Init(&irLeft);
 	IR_Init(&irRight);
 }
 
 void Car_Mode_RC(){
-	PWM1_Init(motorPWM);
+	PWM1_Init(&motorPWM);
 	PWM1_Start();
 	while (CAR_MODE_RC == modeCommand) {
+#ifdef DEBUG_MESSAGES_ENABLED
 		UART_SendString("Command: ");
 		char debug[12];
 		sprintf(debug, "%c", RCCommand);
 		UART_SendString(debug);
 		UART_SendString("\n");
+#endif
         switch (RCCommand) {
             case 'F': CAR_Move_Forward(); 	 _delay_ms(50);  break;
             case 'B': CAR_Move_Backward(); 	 _delay_ms(50);  break;
@@ -83,27 +85,24 @@ void Car_Mode_RC(){
             default: break;
         }
     }
+	PWM1_SetDutyCycle(50);
 }
 
 void Car_Mode_OA() {
     Ultrasonic_Init(&ultrasonic_sensor);
-    PWM1_Init(motorPWM);
-    PWM1_Start();
-    PWM1_SetDutyCycle(60);
 
     while (CAR_MODE_OA == modeCommand) {
         uint16 distance = Ultrasonic_Calculate_Distance(&ultrasonic_sensor);
-
-        // Debug output
+#ifdef DEBUG_MESSAGES_ENABLED
         UART_SendString("Distance: ");
         char debug[10];
         sprintf(debug, "%u", distance);
         UART_SendString(debug);
         UART_SendString(" cm\n");
-
+#endif
         switch(distance){
-			case 23 ... 300: 	PWM1_SetDutyCycle(60);  CAR_Move_Forward();  	break;
-        	case 10 ... 22:     PWM1_SetDutyCycle(40);	CAR_Move_Forward();		break;
+			case 23 ... 300: 	/*PWM1_SetDutyCycle(60);*/  CAR_Move_Forward();  	break;
+        	case 10 ... 22:     /*PWM1_SetDutyCycle(40);*/	CAR_Move_Forward();		break;
 			case 1 ... 9:
 				CAR_Stop();
 				_delay_ms(100);
@@ -120,10 +119,9 @@ void Car_Mode_OA() {
 }
 
 void Car_Mode_LF(){
-	PWM1_Init(motorPWM);
+	PWM1_Init(&motorPWM);
 	PWM1_SetDutyCycle(50);
 	uint8 leftState, rightState;
-	char debug[10];
 
 	while (CAR_MODE_LF == modeCommand) {
         leftState  = IR_ReadValue(&irLeft);
@@ -142,6 +140,9 @@ void Car_Mode_LF(){
             CAR_Stop();
         }
 
+#ifdef DEBUG_MESSAGES_ENABLED
+		UART_SendString("LF Sensors: ");
+		char debug[10];
         UART_SendString("LF: L=");
 		sprintf(debug, "%u", leftState);
 		UART_SendString(debug);
@@ -149,6 +150,7 @@ void Car_Mode_LF(){
 		sprintf(debug, "%u", rightState);
 		UART_SendString(debug);
         UART_SendString("\n");
+#endif
 
         _delay_ms(50);
     }
@@ -164,26 +166,26 @@ void Car_Mode_Maze(){
 }
 
 static void CAR_Move_Forward(){
-	DC_Motor_Move_CW(motorLeft);
-	DC_Motor_Move_CW(motorRight);
+	DC_Motor_Move_CW(&motorLeft);
+	DC_Motor_Move_CW(&motorRight);
 }
 
 static void CAR_Move_Backward(){
-	DC_Motor_Move_CCW(motorLeft);
-	DC_Motor_Move_CCW(motorRight);
+	DC_Motor_Move_CCW(&motorLeft);
+	DC_Motor_Move_CCW(&motorRight);
 }
 
 static void CAR_Move_Right(){
-	DC_Motor_Move_CW(motorLeft);
-	DC_Motor_Move_CCW(motorRight);
+	DC_Motor_Move_CW(&motorLeft);
+	DC_Motor_Move_CCW(&motorRight);
 }
 
 static void CAR_Move_Left(){
-	DC_Motor_Move_CCW(motorLeft);
-	DC_Motor_Move_CW(motorRight);
+	DC_Motor_Move_CCW(&motorLeft);
+	DC_Motor_Move_CW(&motorRight);
 }
 
 static void CAR_Stop(){
-	DC_Motor_Stop(motorLeft);
-	DC_Motor_Stop(motorRight);
+	DC_Motor_Stop(&motorLeft);
+	DC_Motor_Stop(&motorRight);
 }

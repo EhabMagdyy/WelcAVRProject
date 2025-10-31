@@ -6,8 +6,8 @@
  */ 
 
 
-#ifndef RCSR04_H_
-#define RCSR04_H_
+#ifndef HCSR04_H_
+#define HCSR04_H_
 
 #include "../../MCAL/DIO/dio.h"
 
@@ -19,4 +19,4 @@ typedef struct {
 void Ultrasonic_Init(ultrasonic_t* obj);
 uint16 Ultrasonic_Calculate_Distance(ultrasonic_t* obj);
 
-#endif /* RCSR04_H_ */
+#endif /* HCSR04_H_ */

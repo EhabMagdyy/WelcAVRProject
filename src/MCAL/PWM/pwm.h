@@ -16,7 +16,7 @@ typedef struct {
 	uint8 duty_cycle;      // Initial duty cycle (0–100%)
 } PWM_Config_t;
 
-void PWM1_Init(PWM_Config_t config);
+void PWM1_Init(PWM_Config_t* config);
 void PWM1_SetDutyCycle(uint8 duty);
 void PWM1_Start(void);
 void PWM1_Stop(void);
