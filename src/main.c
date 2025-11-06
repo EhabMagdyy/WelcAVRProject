@@ -8,7 +8,7 @@
 #include "Lib/SystemConfig.h"
 #include "Application/app.h"
 
-volatile uint8 modeCommand = 0;
+volatile uint8 modeCommand = '6';
 volatile uint8 RCCommand = 0;
 
 void UART_InterruptHandler(void)

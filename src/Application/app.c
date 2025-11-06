@@ -88,28 +88,42 @@ void Car_Mode_RC(){
 	PWM1_SetDutyCycle(50);
 }
 
-void Car_Mode_OA() {
-    Ultrasonic_Init(&ultrasonic_sensor);
-
+void Car_Mode_OA(void) {
+	uint16_t distance = 0;
     while (CAR_MODE_OA == modeCommand) {
-        uint16 distance = Ultrasonic_Calculate_Distance(&ultrasonic_sensor);
-#ifdef DEBUG_MESSAGES_ENABLED
-        UART_SendString("Distance: ");
-        char debug[10];
-        sprintf(debug, "%u", distance);
-        UART_SendString(debug);
-        UART_SendString(" cm\n");
-#endif
-        switch(distance){
-			case 23 ... 300: 	/*PWM1_SetDutyCycle(60);*/  CAR_Move_Forward();  	break;
-        	case 10 ... 22:     /*PWM1_SetDutyCycle(40);*/	CAR_Move_Forward();		break;
-			case 1 ... 9:
-				CAR_Stop();
-				_delay_ms(100);
-				CAR_Move_Right();
-				_delay_ms(200);
-				CAR_Stop();
-				break;
+        distance = Ultrasonic_Calculate_Distance(&ultrasonic_sensor);
+
+        if (distance > 25) {
+            CAR_Move_Forward();
+        } 
+        else if (distance <= 25 && distance > 0) {
+            CAR_Move_Backward();
+            _delay_ms(200);
+
+            CAR_Move_Right();
+            _delay_ms(400);
+            CAR_Stop();
+            _delay_ms(100);
+
+            uint16_t newDist = Ultrasonic_Calculate_Distance(&ultrasonic_sensor);
+
+            if (newDist <= 20 && newDist > 0) {
+                CAR_Move_Left();
+                _delay_ms(600);
+                CAR_Stop();
+                _delay_ms(100);
+
+                newDist = Ultrasonic_Calculate_Distance(&ultrasonic_sensor);
+
+                if (newDist <= 20 && newDist > 0) {
+                    CAR_Move_Backward();
+                    _delay_ms(300);
+                    CAR_Stop();
+                }
+            }
+        } 
+        else {
+            CAR_Stop();
         }
 
         _delay_ms(50);
