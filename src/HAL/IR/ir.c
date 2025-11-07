@@ -8,5 +8,5 @@ void IR_Init(pin_config_t* irObj){
 }
 
 uint8 IR_ReadValue(pin_config_t* irOb){
-    return READ_BIT(PINC, irOb->pin);
+    return DIO_GetPinLogic(PINC, irOb->pin);
 }

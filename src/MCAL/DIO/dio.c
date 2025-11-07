@@ -70,17 +70,9 @@ void DIO_SetPinValue(pin_config_t* dioPin)
     }
 }
 
-uint8 DIO_GetPinLogic(pin_config_t* dioPin)
+uint8 DIO_GetPinLogic(uint8 port, uint8 pin)
 {
-    uint8 pin_value = DIO_LOW;
-    if (dioPin->port < MAX_PORT_NUMBER && dioPin->pin < MAX_PIN_NUMBER)
-    {
-        pin_value = READ_BIT(PINB, PIN2);
-    }
-    else
-    {
-        /* invalid argument */
-    }
+    uint8 pin_value = READ_BIT(port, pin);
     return pin_value;
 }
 

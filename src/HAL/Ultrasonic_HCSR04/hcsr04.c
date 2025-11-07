@@ -52,13 +52,6 @@ uint16 Ultrasonic_Calculate_Distance(ultrasonic_t *obj)
     uint16 avg = (uint16)(sum / HISTORY_SIZE);
     lastValid = avg;
 
-#ifdef DEBUG_MESSAGES_ENABLED
-    char debug[10];
-    sprintf(debug, "%u", avg);
-    UART_SendString(debug);
-    UART_SendString(" cm\n");
-#endif
-
     return avg;
 }
 
@@ -74,7 +67,7 @@ static uint16 Ultrasonic_Single_Read(ultrasonic_t *obj)
     DIO_SetPinValue(&(obj->trigger));
 
     uint32_t timeout = 40000;
-    while (DIO_LOW == DIO_GetPinLogic(&obj->echo)) {
+    while (DIO_LOW == DIO_GetPinLogic(PINB, PIN2)) {
         if (--timeout == 0)
             return 0;
     }
@@ -82,7 +75,7 @@ static uint16 Ultrasonic_Single_Read(ultrasonic_t *obj)
     Timer0_Init();
     ovfCount = 0;
 
-    while (DIO_HIGH == DIO_GetPinLogic(&obj->echo)) {
+    while (DIO_HIGH == DIO_GetPinLogic(PINB, PIN2)) {
         if (Timer0_CheckOverFlow()) {
             Timer0_ClearOverFlowFlag();
             ovfCount++;

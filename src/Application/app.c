@@ -65,8 +65,7 @@ void Car_Mode_RC(){
 	PWM1_Start();
 	while (CAR_MODE_RC == modeCommand) {
 #ifdef DEBUG_MESSAGES_ENABLED
-		UART_SendString("Command: ");
-		char debug[12];
+		char debug[4];
 		sprintf(debug, "%c", RCCommand);
 		UART_SendString(debug);
 		UART_SendString("\n");
@@ -92,7 +91,12 @@ void Car_Mode_OA(void) {
 	uint16_t distance = 0;
     while (CAR_MODE_OA == modeCommand) {
         distance = Ultrasonic_Calculate_Distance(&ultrasonic_sensor);
-
+        #ifdef DEBUG_MESSAGES_ENABLED
+                char debug[4];
+                sprintf(debug, "%u", distance);
+                UART_SendString(debug);
+                UART_SendString("\n");
+        #endif
         if (distance > 25) {
             CAR_Move_Forward();
         } 
@@ -134,7 +138,8 @@ void Car_Mode_OA(void) {
 
 void Car_Mode_LF(){
 	PWM1_Init(&motorPWM);
-	PWM1_SetDutyCycle(50);
+	PWM1_SetDutyCycle(30);
+	PWM1_Start();
 	uint8 leftState, rightState;
 
 	while (CAR_MODE_LF == modeCommand) {
@@ -145,28 +150,27 @@ void Car_Mode_LF(){
             CAR_Move_Forward();
         }
         else if (leftState == DIO_LOW && rightState == DIO_HIGH) {
-            CAR_Move_Left();
+            CAR_Move_Right();
         }
         else if (leftState == DIO_HIGH && rightState == DIO_LOW) {
-            CAR_Move_Right();
+            CAR_Move_Left();
         }
         else {
             CAR_Stop();
         }
 
 #ifdef DEBUG_MESSAGES_ENABLED
-		UART_SendString("LF Sensors: ");
 		char debug[10];
-        UART_SendString("LF: L=");
+        UART_SendString("L=");
 		sprintf(debug, "%u", leftState);
 		UART_SendString(debug);
-        UART_SendString(" R=");
+        UART_SendString("-R=");
 		sprintf(debug, "%u", rightState);
 		UART_SendString(debug);
         UART_SendString("\n");
 #endif
 
-        _delay_ms(50);
+        _delay_ms(30);
     }
 
 	CAR_Stop();

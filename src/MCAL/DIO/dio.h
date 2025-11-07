@@ -58,7 +58,7 @@ typedef struct{
 void DIO_Init(pin_config_t* dioPin);
 void DIO_SetPinDirection(pin_config_t* dioPin);
 void DIO_SetPinValue(pin_config_t* dioPin);
-uint8 DIO_GetPinLogic(pin_config_t* dioPin);
+uint8 DIO_GetPinLogic(uint8 port, uint8 pin);
 void DIO_TogglePinValue(pin_config_t* dioPin);
 
 

@@ -3,4 +3,4 @@
 #include <util/delay.h>
 #include <stdio.h>
 
-#define DEBUG_MESSAGES_ENABLED
+//#define DEBUG_MESSAGES_ENABLED
