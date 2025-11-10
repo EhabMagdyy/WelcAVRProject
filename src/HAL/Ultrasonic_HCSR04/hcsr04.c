@@ -1,9 +1,3 @@
-/*
- * hcsr04.c
- *
- * Created: 10/26/2025
- * Author: Ehab
- */
 
 #include "../../Lib/SystemConfig.h"
 #include "../../Lib/STD_Types.h"
@@ -18,6 +12,12 @@
 #define HISTORY_SIZE               3
 
 static uint16 Ultrasonic_Single_Read(ultrasonic_t *obj);
+
+void Ultrasonic_Init(ultrasonic_t *obj){
+    obj->trigger.direction = DIO_DIRECTION_OUTPUT;
+    obj->echo.direction = DIO_DIRECTION_INPUT;
+    DIO_SetPinValue(&(obj->trigger));
+}
 
 uint16 Ultrasonic_Calculate_Distance(ultrasonic_t *obj)
 {

@@ -1,10 +1,3 @@
-/*
- * pwm.h
- *
- * Created: 10/26/2025 10:43:49 PM
- *  Author: Ehab
- */ 
-
 
 #ifndef PWM_H_
 #define PWM_H_

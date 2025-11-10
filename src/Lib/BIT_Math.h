@@ -1,10 +1,3 @@
-/*
- * IncFile1.h
- *
- * Created: 9/6/2025 1:54:59 PM
- *  Author: Ehab
- */ 
-
 
 #ifndef BIT_MATH_H_
 #define BIT_MATH_H_

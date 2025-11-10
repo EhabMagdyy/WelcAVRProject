@@ -1,9 +1,3 @@
-/*
- * timer.c
- *
- * Created: 10/21/2025 12:00:00 PM
- *  Author: Ehab
- */ 
 
 #include "Lib/SystemConfig.h"
 #include <avr/interrupt.h>

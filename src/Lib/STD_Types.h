@@ -1,10 +1,3 @@
-/*
- * STD_Types.h
- *
- * Created: 9/6/2025 1:56:16 PM
- *  Auintthor: Ehab
- */ 
-
 
 #ifndef STD_TYPES_H_
 #define STD_TYPES_H_

@@ -8,6 +8,8 @@
         "dio.h": "c",
         "hcsr04.h": "c",
         "interrupt.h": "c",
-        "io.h": "c"
+        "io.h": "c",
+        "timer0.h": "c",
+        "uart.h": "c"
     }
 }

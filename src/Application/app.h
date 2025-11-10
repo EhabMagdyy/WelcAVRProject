@@ -1,10 +1,3 @@
-/*
- * app.h
- *
- * Created: 10/23/2025 3:57:46 PM
- *  Author: Ehab
- */ 
-
 
 #ifndef APP_H_
 #define APP_H_

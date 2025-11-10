@@ -1,9 +1,3 @@
-/*
- * pwm.c
- *
- * Created: 10/26/2025 10:43:35 PM
- *  Author: Ehab
- */ 
 
 #include "../../Lib/SystemConfig.h"
 #include "../../Lib/BIT_Math.h"

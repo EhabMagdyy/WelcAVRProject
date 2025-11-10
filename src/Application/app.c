@@ -1,9 +1,3 @@
-/*
- * app.c
- *
- * Created: 10/23/2025 3:57:35 PM
- *  Author: Ehab
- */ 
 
 #include "../Lib/SystemConfig.h"
 #include "app.h"

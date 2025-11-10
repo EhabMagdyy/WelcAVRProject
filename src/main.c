@@ -1,9 +1,3 @@
-/*
- * RC_Car.c
- *
- * Created: 10/22/2025 12:27:41 PM
- * Author : Ehab
- */ 
 
 #include "Lib/SystemConfig.h"
 #include "Application/app.h"
@@ -37,5 +31,3 @@ int main(void)
 		Car_Mode_Maze();
     }
 }
-
-

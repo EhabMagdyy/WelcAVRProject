@@ -1,10 +1,3 @@
-/*
- * rcsr04.h
- *
- * Created: 10/26/2025 1:12:09 PM
- *  Author: Ehab
- */ 
-
 
 #ifndef HCSR04_H_
 #define HCSR04_H_
